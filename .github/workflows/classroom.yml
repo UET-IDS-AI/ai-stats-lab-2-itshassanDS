@@ -22,9 +22,99 @@ jobs:
         command: pytest test_AIstats_lab.py::test_probability_union -q
         timeout: 10
         max-score: 10
+    - name: Q2
+      id: q2
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Q2
+        setup-command: pip install numpy matplotlib pytest
+        command: pytest test_AIstats_lab.py::test_conditional_probability -q
+        timeout: 10
+        max-score: 10
+    - name: Q3
+      id: q3
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Q3
+        setup-command: pip install numpy matplotlib pytest
+        command: 'pytest test_AIstats_lab.py::test_are_independent -q '
+        timeout: 10
+        max-score: 10
+    - name: Q4
+      id: q4
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Q4
+        setup-command: pip install numpy matplotlib pytest
+        command: pytest test_AIstats_lab.py::test_bayes_rule -q
+        timeout: 10
+        max-score: 10
+    - name: Q5
+      id: q5
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Q5
+        setup-command: pip install numpy matplotlib pytest
+        command: pytest test_AIstats_lab.py::test_bernoulli_pmf -q
+        timeout: 10
+        max-score: 10
+    - name: Q6
+      id: q6
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Q6
+        setup-command: pip install numpy matplotlib pytest
+        command: pytest test_AIstats_lab.py::test_bernoulli_symmetry -q
+        timeout: 10
+        max-score: 10
+    - name: Q7
+      id: q7
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Q7
+        setup-command: pip install numpy matplotlib pytest
+        command: pytest test_AIstats_lab.py::test_normal_pdf -q
+        timeout: 10
+        max-score: 10
+    - name: Q8
+      id: q8
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Q8
+        setup-command: pip install numpy matplotlib pytest
+        command: pytest test_AIstats_lab.py::test_normal_statistics -q
+        timeout: 10
+        max-score: 10
+    - name: Q9
+      id: q9
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Q9
+        setup-command: pip install numpy matplotlib pytest
+        command: pytest test_AIstats_lab.py::test_uniform_mean_variance -q
+        timeout: 10
+        max-score: 10
+    - name: Q10
+      id: q10
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Q10
+        setup-command: pip install numpy matplotlib pytest
+        command: pytest test_AIstats_lab.py::test_uniform_statistics -q
+        timeout: 10
+        max-score: 10
     - name: Autograding Reporter
       uses: classroom-resources/autograding-grading-reporter@v1
       env:
         Q1_RESULTS: "${{steps.q1.outputs.result}}"
+        Q2_RESULTS: "${{steps.q2.outputs.result}}"
+        Q3_RESULTS: "${{steps.q3.outputs.result}}"
+        Q4_RESULTS: "${{steps.q4.outputs.result}}"
+        Q5_RESULTS: "${{steps.q5.outputs.result}}"
+        Q6_RESULTS: "${{steps.q6.outputs.result}}"
+        Q7_RESULTS: "${{steps.q7.outputs.result}}"
+        Q8_RESULTS: "${{steps.q8.outputs.result}}"
+        Q9_RESULTS: "${{steps.q9.outputs.result}}"
+        Q10_RESULTS: "${{steps.q10.outputs.result}}"
       with:
-        runners: q1
+        runners: q1,q2,q3,q4,q5,q6,q7,q8,q9,q10

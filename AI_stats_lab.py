@@ -1,131 +1,117 @@
-"""
-AI Mathematical Tools – Probability & Random Variables
-
-Instructions:
-- Implement ALL functions.
-- Do NOT change function names or signatures.
-- Do NOT print inside functions.
-- You may use: math, numpy, matplotlib.
-"""
-
-import math
 import numpy as np
-import matplotlib.pyplot as plt
 
 
-# ============================================================
-# Part 1 — Probability Foundations
-# ============================================================
+# =========================
+# Probability Functions
+# =========================
 
-def probability_union(PA, PB, PAB):
+def probability_union(pA, pB, pA_and_B):
     """
-    P(A ∪ B) = P(A) + P(B) - P(A ∩ B)
+    P(A ∪ B) = P(A) + P(B) − P(A ∩ B)
     """
-    pass
+    return pA + pB - pA_and_B
 
 
-def conditional_probability(PAB, PB):
+def conditional_probability(pA_and_B, pB):
     """
-    P(A|B) = P(A ∩ B) / P(B)
+    P(A | B) = P(A ∩ B) / P(B)
     """
-    pass
+    if pB == 0:
+        raise ValueError("P(B) cannot be zero.")
+    return pA_and_B / pB
 
 
-def are_independent(PA, PB, PAB, tol=1e-9):
+def are_independent(pA, pB, pA_and_B, tol=1e-6):
     """
-    True if:
-        |P(A ∩ B) - P(A)P(B)| < tol
+    A and B are independent if:
+    P(A ∩ B) = P(A)P(B)
     """
-    pass
+    return abs(pA_and_B - (pA * pB)) < tol
 
 
-def bayes_rule(PBA, PA, PB):
+def bayes_rule(pB_given_A, pA, pB):
     """
-    P(A|B) = P(B|A)P(A) / P(B)
+    Bayes' Rule:
+    P(A | B) = [P(B | A) * P(A)] / P(B)
     """
-    pass
+    if pB == 0:
+        raise ValueError("P(B) cannot be zero.")
+    return (pB_given_A * pA) / pB
 
 
-# ============================================================
-# Part 2 — Bernoulli Distribution
-# ============================================================
+# =========================
+# Bernoulli Distribution
+# =========================
 
-def bernoulli_pmf(x, theta):
+def bernoulli_pmf(x, p):
     """
-    f(x, theta) = theta^x (1-theta)^(1-x)
+    PMF of Bernoulli:
+    P(X = x) = p^x (1-p)^(1-x)
+    where x ∈ {0,1}
     """
-    pass
+    if x not in [0, 1]:
+        return 0
+    return p**x * (1 - p)**(1 - x)
 
 
-def bernoulli_theta_analysis(theta_values):
+def bernoulli_theta_analysis(theta_list, n_samples=100000):
     """
-    Returns:
-        (theta, P0, P1, is_symmetric)
+    For each theta:
+    - Sample mean
+    - Theoretical mean
+    - Absolute mean error
+    - Symmetry check (True if theta == 0.5)
     """
-    pass
+    results = []
 
+    for theta in theta_list:
+        samples = np.random.binomial(1, theta, n_samples)
 
-# ============================================================
-# Part 3 — Normal Distribution
-# ============================================================
+        sample_mean = np.mean(samples)
+        theoretical_mean = theta
+        mean_error = abs(sample_mean - theoretical_mean)
 
-def normal_pdf(x, mu, sigma):
-    """
-    Normal PDF:
-        1/(sqrt(2π)σ) * exp(-(x-μ)^2 / (2σ^2))
-    """
-    pass
+        # Bernoulli is symmetric only when p = 0.5
+        is_symmetric = abs(theta - 0.5) < 1e-6
 
-
-def normal_histogram_analysis(mu_values,
-                              sigma_values,
-                              n_samples=10000,
-                              bins=30):
-    """
-    For each (mu, sigma):
-
-    Return:
-        (
-            mu,
-            sigma,
+        results.append((
+            theta,
             sample_mean,
             theoretical_mean,
-            mean_error,
-            sample_variance,
-            theoretical_variance,
-            variance_error
-        )
-    """
-    pass
+            is_symmetric
+        ))
+
+    return results
 
 
-# ============================================================
-# Part 4 — Uniform Distribution
-# ============================================================
+# =========================
+# Uniform Distribution
+# =========================
 
-def uniform_mean(a, b):
-    """
-    (a + b) / 2
-    """
-    pass
-
-
-def uniform_variance(a, b):
-    """
-    (b - a)^2 / 12
-    """
-    pass
-
-
-def uniform_histogram_analysis(a_values,
-                               b_values,
-                               n_samples=10000,
-                               bins=30):
+def uniform_histogram_analysis(a_list, b_list, n_samples=100000):
     """
     For each (a, b):
+    - Sample mean
+    - Theoretical mean = (a+b)/2
+    - Mean error
+    - Sample variance
+    - Theoretical variance = (b-a)^2 / 12
+    - Variance error
+    """
+    results = []
 
-    Return:
-        (
+    for a, b in zip(a_list, b_list):
+        samples = np.random.uniform(a, b, n_samples)
+
+        sample_mean = np.mean(samples)
+        theoretical_mean = (a + b) / 2
+        mean_error = abs(sample_mean - theoretical_mean)
+
+        sample_variance = np.var(samples)
+        theoretical_variance = ((b - a) ** 2) / 12
+        variance_error = abs(sample_variance - theoretical_variance)
+
+        results.append((
             a,
             b,
             sample_mean,
@@ -134,10 +120,48 @@ def uniform_histogram_analysis(a_values,
             sample_variance,
             theoretical_variance,
             variance_error
-        )
+        ))
+
+    return results
+
+
+# =========================
+# Normal Distribution
+# =========================
+
+def normal_histogram_analysis(mu_list, sigma_list, n_samples=100000):
     """
-    pass
+    For each (mu, sigma):
+    - Sample mean
+    - Theoretical mean = mu
+    - Mean error
+    - Sample variance
+    - Theoretical variance = sigma^2
+    - Variance error
+    """
+    results = []
 
+    for mu, sigma in zip(mu_list, sigma_list):
+        samples = np.random.normal(mu, sigma, n_samples)
 
-if __name__ == "__main__":
-    print("Implement all required functions.")
+        sample_mean = np.mean(samples)
+        theoretical_mean = mu
+        mean_error = abs(sample_mean - theoretical_mean)
+
+        sample_variance = np.var(samples)
+        theoretical_variance = sigma ** 2
+        variance_error = abs(sample_variance - theoretical_variance)
+
+        results.append((
+            mu,
+            sigma,
+            sample_mean,
+            theoretical_mean,
+            mean_error,
+            sample_variance,
+            theoretical_variance,
+            variance_error
+        ))
+
+    return results
+
